@@ -31,7 +31,7 @@
 
         Query = "select " & Campos & " from b_ticket where status = 'OK' and zafra = '" & sZafra & "' order by ticket;"
 
-       Query1 = "insert into b_ticket_b (" & Campos & ") values "
+        Query1 = "insert into b_ticket_b (" & Campos & ") values "
 
         rs.Open Query, dbconn
 
