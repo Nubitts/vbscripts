@@ -107,6 +107,8 @@
 
         dbconn.Close
 
+        
+
     End if
 
 
@@ -162,7 +164,7 @@
 
     end sub 
         
-        Function GetFormattedDate (Date)
+    Function GetFormattedDate (Date)
             strDate = CDate(Date)
             strDay = DatePart("d", strDate)
             strMonth = DatePart("m", strDate)
@@ -174,4 +176,4 @@
               strMonth = "0" & strMonth
             End If
             GetFormattedDate = strYear & "-" & strMonth & "-" & strDay
-          End Function
+    End Function
