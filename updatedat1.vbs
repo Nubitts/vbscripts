@@ -14,11 +14,12 @@
     Dim sZafra 
     sZafra = "2021"
     Dim dbconn, connect, myCommand, rs
-    Dim Ping, Query, Query1, nReg, Valores, Contiene
+    Dim Ping, Query, Query1, nReg, Valores, Contiene, Ping1
 
     Ping = Valida_ip(Origen)
+    Ping1 = Valida_ip(Destino)
 
-    if Ping = true Then
+    if Ping = true and Ping1 = true Then
 
         connect = "Driver={MySQL ODBC 8.0 ANSI Driver};Server=" & Origen & ";PORT=3306;Database=bascula;User=cristobal;Password=bascristo;"
 
@@ -107,7 +108,7 @@
 
         dbconn.Close
 
-        
+        Actualiza Destino,sZafra
 
     End if
 
@@ -149,7 +150,7 @@
         Set dbconn1 = CreateObject("ADODB.Connection")
         Set myCommand1 = CreateObject("ADODB.Command")
 
-        connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};Server=" & Destino & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;"
+        connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
 
         dbconn1.Open connect1
 
@@ -177,3 +178,22 @@
             End If
             GetFormattedDate = strYear & "-" & strMonth & "-" & strDay
     End Function
+
+    Sub Actualiza(Destino, zafra)
+
+        dim Query
+        dim Campos
+        
+        Campos = "idhr,zona,organiza,clave,nombre,ciclo,orden,ticket,fletero,fecha,hora,neto,descto,liquido,alzadora,diaz,zafrad,nofecha,tabla,grupo,"  & _
+                 "pesob,pesot,peson,pesol,plantas,socas,resocas,ton_cruda,ton_quemada,ton_descuentos,ton_castigos,btkt_cruda,btkt_quemada,btkt_caña,ton_manual,"  & _
+                 "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent"
+
+        Query = "delete from `caña` where zafrad = " & zafra
+
+        Ejecuta Query,Destino
+
+        Query = "insert into `caña` (" & Campos & ") select " & Campos & " from vcane where zafrad = " & zafra
+
+        Ejecuta Query,Destino
+
+    end sub
