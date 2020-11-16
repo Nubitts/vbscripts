@@ -16,7 +16,143 @@ if ChOrigen = true and ChDestino = true Then
 
     grupos Origen,Destino
 
+    fleteros Origen,Destino
+
+    canes Origen,Destino
+
 end if
+
+
+sub canes(Origen,Destino)
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+
+    Set dbconn = CreateObject("ADODB.Connection")
+    Set myCommand = CreateObject("ADODB.Command")
+    set rs = CreateObject("ADODB.Recordset")
+
+    dim valores
+
+    dbconn.Open connect
+
+    Campos = "idhr,zona,organiza,clave,nombre,ciclo,orden,ticket,fletero,fecha,hora,neto,descto,liquido,alzadora,diaz,zafrad,nofecha,tabla,grupo,"  & _
+    "pesob,pesot,peson,pesol,plantas,socas,resocas,ton_cruda,ton_quemada,ton_descuentos,ton_castigos,btkt_cruda,btkt_quemada,btkt_caña,ton_manual,"  & _
+    "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent"
+
+
+    Query = "select " & Campos & " from `caña` where zafrad = 2021 order by orden, ticket;"
+
+    Queryd = "insert into canes_tempo (" & Campos & ") values"
+
+    rs.Open Query, dbconn
+
+    if not rs.eof Then
+
+        rs.movefirst
+
+        while not rs.eof 
+
+            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = 2021 and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = false Then
+
+                valores = " (" & rs.Fields(0) & ", " 
+                valores = valores & rs.Fields(1) & ", "
+                valores = valores & "'" & rs.Fields(2) & "', "
+                valores = valores & rs.Fields(3) & ", "
+                valores = valores & "'" & rs.Fields(4) & "', "
+                valores = valores & "'" & rs.Fields(5) & "', "
+                valores = valores & rs.Fields(6) & ", "
+                valores = valores & rs.Fields(7) & ", "
+                valores = valores & rs.Fields(8) & ", "
+                valores = valores & "'" & rs.Fields(9) & "', "
+                valores = valores & "'" & rs.Fields(10) & "', "
+                valores = valores & rs.Fields(11) & ", "
+                valores = valores & rs.Fields(12) & ", "
+                valores = valores & rs.Fields(13) & ", "
+                valores = valores & rs.Fields(14) & ", "
+                valores = valores & rs.Fields(15) & ", "
+                valores = valores & rs.Fields(16) & ", "
+                valores = valores & rs.Fields(17) & ", "
+                valores = valores & rs.Fields(18) & ", "
+                valores = valores & rs.Fields(19) & ", "
+                valores = valores & rs.Fields(20) & ", "
+                valores = valores & rs.Fields(21) & ", "
+                valores = valores & rs.Fields(22) & ", "
+                valores = valores & rs.Fields(23) & ", "
+                valores = valores & rs.Fields(24) & ", "
+                valores = valores & rs.Fields(25) & ", "
+                valores = valores & rs.Fields(26) & ", "
+                valores = valores & rs.Fields(27) & ", "
+                valores = valores & rs.Fields(28) & ", "
+                valores = valores & rs.Fields(29) & ", "
+                valores = valores & rs.Fields(30) & ", "
+                valores = valores & rs.Fields(31) & ", "
+                valores = valores & rs.Fields(32) & ", "
+                valores = valores & rs.Fields(33) & ", "
+                valores = valores & rs.Fields(34) & ", "
+                valores = valores & rs.Fields(35) & ", "
+                valores = valores & rs.Fields(36) & ", "
+                valores = valores & "'" &  rs.Fields(37) & "', "
+                valores = valores & "'" &  rs.Fields(38) & "', "
+                valores = valores & "'" &  rs.Fields(39) & "', "
+                valores = valores & "'" &  rs.Fields(40) & "', "
+                valores = valores & "'" &  rs.Fields(41) & "', "
+                valores = valores & "'" &  rs.Fields(42) & "')"
+                Ejecuta Queryd & valores, Destino
+
+            end if 
+
+            rs.movenext
+
+        Wend
+
+    end if
+
+    rs.Close
+
+    dbconn.Close
+
+end sub
+
+sub fleteros(Origen,Destino)
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+
+    Set dbconn = CreateObject("ADODB.Connection")
+    Set myCommand = CreateObject("ADODB.Command")
+    set rs = CreateObject("ADODB.Recordset")
+
+    dim valores
+
+    dbconn.Open connect
+
+    Query = "select num_fle, nombre, zona,1 as zafra,seltipo from fleteros order by num_fle;"
+
+    Queryd = "insert into forwarders (cveforw, fullname,idzone,idzaf,type,activate,dateadd) values"
+
+    rs.Open Query, dbconn
+
+    if not rs.eof Then
+
+        rs.movefirst
+
+        while not rs.eof 
+
+            if valida_reg(Destino,"forwarders", "cveforw", "'" & rs.Fields(0) & "'","" ) = false Then
+
+                valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ", '" & left(rs.Fields(4),1) & "', 1, now())"
+
+                Ejecuta Queryd & valores, Destino
+
+            end if 
+
+            rs.movenext
+
+        Wend
+
+    end if
+
+    rs.Close
+
+    dbconn.Close
+end sub
 
 sub grupos(Origen,Destino)
 
@@ -42,7 +178,7 @@ sub grupos(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"`groups`", "cvegroup", "'" & rs.Fields(0) & "'" ) = false Then
+            if valida_reg(Destino,"`groups`", "cvegroup", "'" & rs.Fields(0) & "'","" ) = false Then
 
                 valores = " ('" & iif(isnull(rs.Fields(0)) = true," ",rs.Fields(0)) & "','" & iif(isnull(rs.Fields(1)) = true," ",rs.Fields(1)) & "'," & iif(isnull(rs.Fields(2)) = true,"0",rs.Fields(2)) & ",1,now())"
                
@@ -85,7 +221,7 @@ sub zonas(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"zones", "cvezone", "'" & rs.Fields(0) & "'" ) = false Then
+            if valida_reg(Destino,"zones", "cvezone", "'" & rs.Fields(0) & "'","" ) = false Then
 
                 valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "',1,now(),"& rs.Fields(2) &")"
 
@@ -128,7 +264,7 @@ sub divisiones(Origen, Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"divisions", "cvediv", "'" & rs.Fields(0) & "'" ) = false Then
+            if valida_reg(Destino,"divisions", "cvediv", "'" & rs.Fields(0) & "'" ,"") = false Then
 
                 valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "',1,now())"
 
@@ -148,7 +284,7 @@ sub divisiones(Origen, Destino)
 
 end sub
 
-function valida_reg(Destino,Tabla, Campo, Valor) 
+function valida_reg(Destino,Tabla, Campo, Valor, expresion) 
 
     dim Resulta
 
@@ -160,7 +296,7 @@ function valida_reg(Destino,Tabla, Campo, Valor)
 
     dbconn.Open connect
 
-    Query = "select * from " & trim(Tabla) & " where " & Campo & " = " & Valor & ";"
+    Query = "select * from " & trim(Tabla) & " where " &  iif(Len(Trim(expresion))=0,Campo & " = " & Valor & ";",expresion )   
 
     rs.Open Query, dbconn
 
