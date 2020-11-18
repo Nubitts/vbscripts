@@ -91,7 +91,7 @@
                 IIF(isnull(rs.Fields(41)) = false,rs.Fields(41),"null") & ","  & _
                 IIF(isnull(rs.Fields(42)) = false,"'" & rs.Fields(42) & "'","null")   & ","   & _
                 IIF(isnull(rs.Fields(43)) = false,"'" & rs.Fields(43) & "'","null")  & ","  & _
-                IIF(isnull(rs.Fields(44)) = false,rs.Fields(44),"null") & ","  & _
+                IIF(isnull(rs.Fields(44)) = false,"'" & rs.Fields(44)& "'","null") & ","  & _
                 IIF(isnull(rs.Fields(45)) = false,"'" & rs.Fields(45) & "'","null")   & ","  & _
                 IIF(isnull(rs.Fields(46)) = false,rs.Fields(46),"null") & ","  & _
                 IIF(isnull(rs.Fields(47)) = false,"'" & rs.Fields(47) & "'","null")   & ","  & _
@@ -101,7 +101,7 @@
                 IIF(isnull(rs.Fields(51)) = false, rs.Fields(51),"null")   & ","  & _
                 IIF(isnull(rs.Fields(52)) = false,"'" & rs.Fields(52) & "'","null")  & ","    & _
                 IIF(isnull(rs.Fields(53)) = false,"'" & rs.Fields(53) & "'","null")  & ")"
-    
+
                 Ejecuta Query1 & Valores,Destino
     
                 rs.MoveNext
@@ -154,7 +154,7 @@
         Set dbconn1 = CreateObject("ADODB.Connection")
         Set myCommand1 = CreateObject("ADODB.Command")
 
-        connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+         connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
 
         dbconn1.Open connect1
 
