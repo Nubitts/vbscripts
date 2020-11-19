@@ -1,6 +1,14 @@
 
-    
-    Dim Campos 
+On Error Resume Next
+
+    Dim Campos, regEx, Sin
+
+    Sin  = "aeiouAEIOUaeiouAEIOUnN"
+
+    Set regEx = New RegExp
+
+    regEx.Pattern = "áéíóúÁÉÍÓÚàèìòùÀÈÌÒÙñÑ"
+    regEx.Global = True
 
     Campos = "zafra,CODIGO,NOMBRE_P,GRUPO,NOM_GRUPO,TABLA,CICLO,TICKET,ORDCTE,TPOCAN,NUMALZ,DESCTO,CASTIGO,PESON,PESOB,PESOT,PESOL,OMITIDO,NUMTRA," & _
     "HORSAL,HORENT,FECPES,TIPO_TICK,TODESCA,FECPEN,FECQUE,HORQUE,TIPQUE,AVISO,NUMAVI,MARCA,MATERIAL,FECHAKK,rfc_empresa,noFecha,timebatey," & _ 
@@ -49,7 +57,7 @@
                 Valores = "(" & _
                 IIF(isnull(rs.Fields(0)) = false,"'" & rs.Fields(0) & "'","null") & "," & _
                 IIF(isnull(rs.Fields(1)) = false,rs.Fields(1),"null") & ","  & _
-                IIF(isnull(rs.Fields(2)) = false,"'" & rs.Fields(2) & "'","null")  & ","    & _
+                IIF(isnull(rs.Fields(2)) = false,"'" & regEx.Replace(rs.Fields(2),"")   & "'","null")  & ","    & _
                 IIF(isnull(rs.Fields(3)) = false,rs.Fields(3),"null") & ","  & _
                 IIF(isnull(rs.Fields(4)) = false,"'" & rs.Fields(4) & "'","null")  & ","   & _
                 IIF(isnull(rs.Fields(5)) = false,rs.Fields(5),"null") & ","  & _
@@ -116,6 +124,10 @@
 
     End if
 
+    if err.Number <> 0 Then
+        MsgBox "Solicitar asistencia a Informatica, error de ejecucion " & err.Description 
+    end if
+
 
     Function Valida_ip(ip)
         dim objPing, objRetStatus, Ping
@@ -166,7 +178,6 @@
 
         dbconn1.Close
 
-
     end sub 
         
     Function GetFormattedDate (Date)
@@ -192,12 +203,13 @@
                  "pesob,pesot,peson,pesol,plantas,socas,resocas,ton_cruda,ton_quemada,ton_descuentos,ton_castigos,btkt_cruda,btkt_quemada,btkt_caña,ton_manual,"  & _
                  "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent"
 
-        Query = "delete from `caña` where zafrad = " & zafra
+        ' Query = "delete from `caña` where zafrad = " & zafra
 
-        Ejecuta Query,Destino
+        ' Ejecuta Query,Destino
 
-        Query = "insert into `caña` (" & Campos & ") select " & Campos & " from vcane where zafrad = " & zafra
+        Query = "insert into `caña` (" & Campos & ") select " & Campos & " from vcane where zafrad = " & zafra & " and ticket not in (select ticket from `caña` where zafrad = 2021)"
 
         Ejecuta Query,Destino
 
     end sub
+
