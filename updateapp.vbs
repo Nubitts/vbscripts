@@ -62,7 +62,7 @@ sub canes(Origen,Destino)
                 valores = valores & rs.Fields(6) & ", "
                 valores = valores & rs.Fields(7) & ", "
                 valores = valores & rs.Fields(8) & ", "
-                valores = valores & "'" & rs.Fields(9) & "', "
+                valores = valores & "'" & iif(instr(rs.Fields(9),"/") > 0,conv_f(rs.Fields(9)),rs.Fields(9))  & "', "
                 valores = valores & "'" & rs.Fields(10) & "', "
                 valores = valores & rs.Fields(11) & ", "
                 valores = valores & rs.Fields(12) & ", "
@@ -355,3 +355,24 @@ Public Function IIf(blnExpression, vTrueResult, vFalseResult)
       IIf = vFalseResult
     End If
 End Function
+
+function conv_f(fecha)
+    dim Position, dia, mes, anual, regresa
+
+    Position = instr(fecha,"/")
+
+    if Position > 0 Then
+
+        dia = left(fecha,Position-1)
+    
+        mes = mid(fecha,position+1,2)
+    
+        anual = Right(fecha,4)
+    
+        regresa = anual & "-" & mes & "-" & dia
+    
+    end if
+
+    conv_f = regresa
+
+end function
