@@ -20,10 +20,54 @@ if ChOrigen = true and ChDestino = true Then
     fleteros Origen,Destino
 
     canes Origen,Destino
+
+    sugar Origen.Destino
+
 else
     msgbox "no hay conexion"
 end if
 
+sub sugar(Origen,Destino)
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=localhost;PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
+
+    Set dbconn = CreateObject("ADODB.Connection")
+    Set myCommand = CreateObject("ADODB.Command")
+    set rs = CreateObject("ADODB.Recordset")
+
+    dim valores
+
+    dbconn.Open connect
+
+    Query = "select date_rec,hour,sugar,cane_ground from sugar_tempo"
+
+    Queryd = "insert into sugar_tempo (date_rec,hour,sugar,cane_ground) values"
+
+    rs.Open Query, dbconn
+
+    if not rs.eof Then
+
+        rs.movefirst
+
+        while not rs.eof 
+
+            if check_reg(Destino,"sugar_tempo", "daterec = '" & rs.Fields(0) & "' and hour = '" & rs.Fields(1) & "'") = false Then
+
+                valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ")"
+
+                Ejecuta Queryd & valores, Destino
+
+            end if 
+
+            rs.movenext
+
+        Wend
+
+    end if
+
+    rs.Close
+
+    dbconn.Close   
+end sub
 
 sub canes(Origen,Destino)
     connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
@@ -379,3 +423,30 @@ function conv_f(fecha)
     conv_f = regresa
 
 end function
+
+function check_reg(Destino,Tabla,expresion) 
+
+        dim Resulta
+    
+        connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server="& Destino &";PORT=3306;Database=ingenioel_applications;User=ingenioel_applications;Password=ADVG12345;option=3;"
+    
+        Set dbconn = CreateObject("ADODB.Connection")
+        Set myCommand = CreateObject("ADODB.Command")
+        set rs = CreateObject("ADODB.Recordset")
+    
+        dbconn.Open connect
+    
+        Query = "select * from " & trim(Tabla) & " where " & expresion  
+    
+        rs.Open Query, dbconn
+    
+        if rs.eof then Resulta = false else Resulta = true end if
+    
+        rs.Close
+    
+        dbconn.Close
+    
+    
+        valida_reg = Resulta
+    
+end function    
