@@ -21,10 +21,10 @@ if ChOrigen = true and ChDestino = true Then
 
     canes Origen,Destino
 
-    sugar Origen.Destino
+    sugar Origen,Destino
 
 else
-    msgbox "no hay conexion"
+    msgbox "no hay conexion reportar a Informatica"
 end if
 
 sub sugar(Origen,Destino)
