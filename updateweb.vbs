@@ -50,7 +50,7 @@ sub sugar(Origen,Destino)
 
         while not rs.eof 
 
-            if check_reg(Destino,"sugar_tempo", "daterec = '" & rs.Fields(0) & "' and hour = '" & rs.Fields(1) & "'") = false Then
+            if check_reg(Destino,"sugar_tempo", "date_rec = '" & rs.Fields(0) & "' and hour = '" & rs.Fields(1) & "'") = false Then
 
                 valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ")"
 
@@ -437,6 +437,8 @@ function check_reg(Destino,Tabla,expresion)
         dbconn.Open connect
     
         Query = "select * from " & trim(Tabla) & " where " & expresion  
+
+        msgbox Query
     
         rs.Open Query, dbconn
     
