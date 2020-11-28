@@ -10,7 +10,6 @@ ChDestino = Valida_ip(Destino)
 
 if ChOrigen = true and ChDestino = true Then
 
-    'Actualizacion de divisiones
     divisiones Origen,Destino
     
     zonas Origen,Destino
@@ -28,7 +27,7 @@ else
 end if
 
 sub sugar(Origen,Destino)
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=localhost;PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=192.168.1.226;PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -344,6 +343,8 @@ function valida_reg(Destino,Tabla, Campo, Valor, expresion)
 
     Query = "select * from " & trim(Tabla) & " where " &  iif(Len(Trim(expresion))=0,Campo & " = " & Valor & ";",expresion )   
 
+    msgbox Query
+
     rs.Open Query, dbconn
 
     if rs.eof then Resulta = false else Resulta = true end if
@@ -449,6 +450,6 @@ function check_reg(Destino,Tabla,expresion)
         dbconn.Close
     
     
-        valida_reg = Resulta
+        check_reg = Resulta
     
 end function    
