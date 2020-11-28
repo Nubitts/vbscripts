@@ -49,9 +49,9 @@ sub sugar(Origen,Destino)
 
         while not rs.eof 
 
-            if check_reg(Destino,"sugar_tempo", "date_rec = '" & rs.Fields(0) & "' and hour = '" & rs.Fields(1) & "'") = false Then
+            if check_reg(Destino,"sugar_tempo", "date_rec = '" & year(rs.Fields(0)) & "/" & Month(rs.Fields(0)) & "/" & day(rs.Fields(0))  & "' and hour = '" & rs.Fields(1) & "'") = false Then
 
-                valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ")"
+                valores = "('" & year(rs.Fields(0)) & "/" & Month(rs.Fields(0)) & "/" & day(rs.Fields(0))  & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ")"
 
                 Ejecuta Queryd & valores, Destino
 
@@ -343,7 +343,6 @@ function valida_reg(Destino,Tabla, Campo, Valor, expresion)
 
     Query = "select * from " & trim(Tabla) & " where " &  iif(Len(Trim(expresion))=0,Campo & " = " & Valor & ";",expresion )   
 
-    msgbox Query
 
     rs.Open Query, dbconn
 
@@ -438,9 +437,7 @@ function check_reg(Destino,Tabla,expresion)
         dbconn.Open connect
     
         Query = "select * from " & trim(Tabla) & " where " & expresion  
-
-        msgbox Query
-    
+   
         rs.Open Query, dbconn
     
         if rs.eof then Resulta = false else Resulta = true end if
