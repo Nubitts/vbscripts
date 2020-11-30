@@ -1,5 +1,5 @@
 Dim Origen 
-Origen = "192.168.1.226"
+Origen = "localhost"
 Dim Destino 
 Destino = "mysql.us.cloudlogin.co"
 
@@ -37,7 +37,7 @@ sub sugar(Origen,Destino)
 
     dbconn.Open connect
 
-    Query = "select date_rec,hour,sugar,cane_ground from sugar_tempo"
+    Query = "select date_rec,hour,sugar,cane_ground from sugar_tempo where date_rec = DATE_SUB(curdate(),INTERVAL 1 DAY)"
 
     Queryd = "insert into sugar_tempo (date_rec,hour,sugar,cane_ground) values"
 
@@ -49,9 +49,9 @@ sub sugar(Origen,Destino)
 
         while not rs.eof 
 
-            if check_reg(Destino,"sugar_tempo", "date_rec = '" & year(rs.Fields(0)) & "/" & Month(rs.Fields(0)) & "/" & day(rs.Fields(0))  & "' and hour = '" & rs.Fields(1) & "'") = false Then
+            if check_reg(Destino,"sugar_tempo", "date_rec = '" & year(rs.Fields(0)) & "/" & iif(len(trim(rs.Fields(0)))=1,"0" & Month(rs.Fields(0)),Month(rs.Fields(0)) )  & "/" & day(rs.Fields(0))  & "' and hour = '" & rs.Fields(1) & "'") = false Then
 
-                valores = "('" & year(rs.Fields(0)) & "/" & Month(rs.Fields(0)) & "/" & day(rs.Fields(0))  & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ")"
+                valores = "('" & year(rs.Fields(0)) & "/" & iif(len(trim(rs.Fields(0)))=1,"0" & Month(rs.Fields(0)),Month(rs.Fields(0)) )  & "/" & day(rs.Fields(0))  & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ")"
 
                 Ejecuta Queryd & valores, Destino
 
@@ -69,7 +69,7 @@ sub sugar(Origen,Destino)
 end sub
 
 sub canes(Origen,Destino)
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -84,7 +84,7 @@ sub canes(Origen,Destino)
     "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent"
 
 
-    Query = "select " & Campos & " from `caña` where zafrad = 2021 order by orden, ticket;"
+    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and fecha = curdate() order by orden, ticket;"
 
     Queryd = "insert into canes_tempo (" & Campos & ") values"
 
@@ -96,7 +96,7 @@ sub canes(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = 2021 and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = false Then
+            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = (select zafra from zafraparams where actual = 1 ) and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = false Then
 
                 valores = " (" & rs.Fields(0) & ", " 
                 valores = valores & rs.Fields(1) & ", "
@@ -158,7 +158,7 @@ sub canes(Origen,Destino)
 end sub
 
 sub fleteros(Origen,Destino)
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -168,7 +168,7 @@ sub fleteros(Origen,Destino)
 
     dbconn.Open connect
 
-    Query = "select num_fle, nombre, zona,1 as zafra,seltipo from fleteros order by num_fle;"
+    Query = "select cveforw, fullname, idzone,idzaf,type,activate,dateadd from forwarders order by cveforw;"
 
     Queryd = "insert into forwarders (cveforw, fullname,idzone,idzaf,type,activate,dateadd) values"
 
@@ -201,7 +201,7 @@ end sub
 
 sub grupos(Origen,Destino)
 
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -211,7 +211,7 @@ sub grupos(Origen,Destino)
 
     dbconn.Open connect
 
-    Query = "select clave_grupo,nombre_grupo,zona from grupos order by clave_grupo;"
+    Query = "select cvegroup,description,idzone from groups order by cvegroup;"
 
     Queryd = "insert into `groups` (cvegroup,description,idzone,activate,dateadd) values"
 
@@ -244,7 +244,7 @@ end sub
 
 sub zonas(Origen,Destino)
 
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -254,7 +254,7 @@ sub zonas(Origen,Destino)
 
     dbconn.Open connect
 
-    Query = "select no_zona,zona,no_div from zonas order by no_zona;"
+    Query = "select cvezone,description,iddiv from zones order by cvezone;"
 
     Queryd = "insert into zones (cvezone,description,activate,dateadd,iddiv) values"
 
@@ -287,7 +287,7 @@ end sub
 
 sub divisiones(Origen, Destino)
 
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3306;Database=cred_campo;User=luis;Password=admin;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -297,7 +297,7 @@ sub divisiones(Origen, Destino)
 
     dbconn.Open connect
 
-    Query = "select no_div, division from divisiones order by no_div;"
+    Query = "select cvediv,description,activate from divisions order by cvediv;"
 
     Queryd = "insert into divisions (cvediv,description,activate,dateadd) values"
 
@@ -311,7 +311,7 @@ sub divisiones(Origen, Destino)
 
             if valida_reg(Destino,"divisions", "cvediv", "'" & rs.Fields(0) & "'" ,"") = false Then
 
-                valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "',1,now())"
+                valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ",now())"
 
                 Ejecuta Queryd & valores, Destino
 
