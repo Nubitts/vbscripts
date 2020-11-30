@@ -57,7 +57,7 @@ On Error Resume Next
                 Valores = "(" & _
                 IIF(isnull(rs.Fields(0)) = false,"'" & rs.Fields(0) & "'","null") & "," & _
                 IIF(isnull(rs.Fields(1)) = false,rs.Fields(1),"null") & ","  & _
-                IIF(isnull(rs.Fields(2)) = false,"'" & regEx.Replace(rs.Fields(2),"")   & "'","null")  & ","    & _
+                IIF(isnull(rs.Fields(2)) = false,"'" & REPLACE(rs.Fields(2),"Ñ","N")  & "'","null")  & ","    & _
                 IIF(isnull(rs.Fields(3)) = false,rs.Fields(3),"null") & ","  & _
                 IIF(isnull(rs.Fields(4)) = false,"'" & rs.Fields(4) & "'","null")  & ","   & _
                 IIF(isnull(rs.Fields(5)) = false,rs.Fields(5),"null") & ","  & _
