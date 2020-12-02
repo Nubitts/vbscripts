@@ -1,26 +1,24 @@
 Dim Origen 
-Origen = "localhost"
+Origen = "192.168.1.226"
 Dim Destino 
 Destino = "mysql.us.cloudlogin.co"
 
 ChOrigen = Valida_ip(origen) 
 ChDestino = Valida_ip(Destino)
 
-
-
 if ChOrigen = true and ChDestino = true Then
 
-    divisiones Origen,Destino
+    ' divisiones Origen,Destino
     
-    zonas Origen,Destino
+    ' zonas Origen,Destino
 
-    grupos Origen,Destino
+    ' grupos Origen,Destino
 
-    fleteros Origen,Destino
+    ' fleteros Origen,Destino
 
     canes Origen,Destino
 
-    sugar Origen,Destino
+    ' sugar Origen,Destino
 
 else
     msgbox "no hay conexion reportar a Informatica"
@@ -49,7 +47,7 @@ sub sugar(Origen,Destino)
 
         while not rs.eof 
 
-            if check_reg(Destino,"sugar_tempo", "date_rec = '" & year(rs.Fields(0)) & "/" & iif(len(trim(rs.Fields(0)))=1,"0" & Month(rs.Fields(0)),Month(rs.Fields(0)) )  & "/" & day(rs.Fields(0))  & "' and hour = '" & rs.Fields(1) & "'") = false Then
+            if check_reg(Destino,"sugar_tempo", "date_rec = '" & year(rs.Fields(0)) & "/" & iif(len(trim(rs.Fields(0)))=1,"0" & Month(rs.Fields(0)),Month(rs.Fields(0)) )  & "/" & day(rs.Fields(0))  & "' and hour = '" & rs.Fields(1) & "'") = true Then
 
                 valores = "('" & year(rs.Fields(0)) & "/" & iif(len(trim(rs.Fields(0)))=1,"0" & Month(rs.Fields(0)),Month(rs.Fields(0)) )  & "/" & day(rs.Fields(0))  & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ")"
 
@@ -84,7 +82,7 @@ sub canes(Origen,Destino)
     "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent"
 
 
-    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and fecha = curdate() order by orden, ticket;"
+    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and fecha = curdate()  order by orden, ticket;"
 
     Queryd = "insert into canes_tempo (" & Campos & ") values"
 
@@ -96,7 +94,7 @@ sub canes(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = (select zafra from zafraparams where actual = 1 ) and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = false Then
+            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = (select zafra from zafraparams where actual = 1 ) and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = true Then
 
                 valores = " (" & rs.Fields(0) & ", " 
                 valores = valores & rs.Fields(1) & ", "
@@ -180,7 +178,7 @@ sub fleteros(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"forwarders", "cveforw", "'" & rs.Fields(0) & "'","" ) = false Then
+            if valida_reg(Destino,"forwarders", "cveforw", "'" & rs.Fields(0) & "'","" ) = true Then
 
                 valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ", " & rs.Fields(3) & ", '" & left(rs.Fields(4),1) & "', 1, now())"
 
@@ -223,7 +221,7 @@ sub grupos(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"`groups`", "cvegroup", "'" & rs.Fields(0) & "'","" ) = false Then
+            if valida_reg(Destino,"`groups`", "cvegroup", "'" & rs.Fields(0) & "'","" ) = true Then
 
                 valores = " ('" & iif(isnull(rs.Fields(0)) = true," ",rs.Fields(0)) & "','" & iif(isnull(rs.Fields(1)) = true," ",rs.Fields(1)) & "'," & iif(isnull(rs.Fields(2)) = true,"0",rs.Fields(2)) & ",1,now())"
                
@@ -266,7 +264,7 @@ sub zonas(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"zones", "cvezone", "'" & rs.Fields(0) & "'","" ) = false Then
+            if valida_reg(Destino,"zones", "cvezone", "'" & rs.Fields(0) & "'","" ) = true Then
 
                 valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "',1,now(),"& rs.Fields(2) &")"
 
@@ -309,7 +307,7 @@ sub divisiones(Origen, Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"divisions", "cvediv", "'" & rs.Fields(0) & "'" ,"") = false Then
+            if valida_reg(Destino,"divisions", "cvediv", "'" & rs.Fields(0) & "'" ,"") = true Then
 
                 valores = " ('" & rs.Fields(0) & "','" & rs.Fields(1) & "'," & rs.Fields(2) & ",now())"
 
@@ -343,10 +341,9 @@ function valida_reg(Destino,Tabla, Campo, Valor, expresion)
 
     Query = "select * from " & trim(Tabla) & " where " &  iif(Len(Trim(expresion))=0,Campo & " = " & Valor & ";",expresion )   
 
-
     rs.Open Query, dbconn
 
-    if rs.eof then Resulta = false else Resulta = true end if
+    Resulta = rs.eof
 
     rs.Close
 
@@ -440,7 +437,7 @@ function check_reg(Destino,Tabla,expresion)
    
         rs.Open Query, dbconn
     
-        if rs.eof then Resulta = false else Resulta = true end if
+        Resulta = rs.eof
     
         rs.Close
     

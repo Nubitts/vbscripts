@@ -1,7 +1,7 @@
 Dim Origen 
 Origen = "192.168.1.226"
 Dim Destino 
-Destino = "192.168.1.92"
+Destino = "localhost"
 
 
 ChOrigen = Valida_ip(origen) 
@@ -9,14 +9,13 @@ ChDestino = Valida_ip(Destino)
 
 if ChOrigen = true and ChDestino = true Then
 
-    'Actualizacion de divisiones
-    divisiones Origen,Destino
+    ' divisiones Origen,Destino
     
-    zonas Origen,Destino
+    ' zonas Origen,Destino
 
-    grupos Origen,Destino
+    ' grupos Origen,Destino
 
-    fleteros Origen,Destino
+    ' fleteros Origen,Destino
 
     canes Origen,Destino
 
@@ -51,7 +50,7 @@ sub canes(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = 2021 and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = false Then
+            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = 2021 and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = true Then
 
                 valores = " (" & rs.Fields(0) & ", " 
                 valores = valores & rs.Fields(1) & ", "
@@ -288,7 +287,7 @@ function valida_reg(Destino,Tabla, Campo, Valor, expresion)
 
     dim Resulta
 
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=localhost;PORT=3306;Database=applications;User=root;Password=12345;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3306;Database=applications;User=root;Password=12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -300,7 +299,7 @@ function valida_reg(Destino,Tabla, Campo, Valor, expresion)
 
     rs.Open Query, dbconn
 
-    if rs.eof then Resulta = false else Resulta = true end if
+    resulta = rs.eof
 
     rs.Close
 
