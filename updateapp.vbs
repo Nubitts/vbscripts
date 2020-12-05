@@ -1,7 +1,7 @@
 Dim Origen 
 Origen = "192.168.1.226"
 Dim Destino 
-Destino = "localhost"
+Destino = "192.168.1.226"
 
 
 ChOrigen = Valida_ip(origen) 
@@ -287,7 +287,7 @@ function valida_reg(Destino,Tabla, Campo, Valor, expresion)
 
     dim Resulta
 
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3306;Database=applications;User=root;Password=12345;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -318,7 +318,7 @@ sub Ejecuta(Oracion, Destino)
     Set dbconn1 = CreateObject("ADODB.Connection")
     Set myCommand1 = CreateObject("ADODB.Command")
 
-    connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=localhost;PORT=3306;Database=applications;User=root;Password=12345;option=3;"
+    connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server="& Destino & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     dbconn1.Open connect1
 
