@@ -1,6 +1,3 @@
-
-On Error Resume Next
-
 Dim Origen, puerto, usuario, passw 
 Origen = "192.168.1.226"
 
@@ -16,13 +13,13 @@ if ChOrigen = true Then
 
     canes Origen,puerto,usuario,passw,autoriza
 
-    sugar Origen,puerto,usuario,passw,autoriza
+    ' sugar Origen,puerto,usuario,passw,autoriza
    
 end if
 
 sub sugar(origen, puerto, usuario, password, autoriza)
 
-    urldestino = "http://www.ingenioelcarmen.com/restdata/v1/sugar"    
+    urldestino = "http://192.168.1.226/restapi/v1/sugar"    
 
     connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=applications;User=" & usuario & ";Password=" & passw & ";option=3;"
 
@@ -73,7 +70,7 @@ end sub
 
 sub canes(origen, puerto, usuario, password, autoriza)
 
-urldestino = "http://www.ingenioelcarmen.com/restdata/v1/canes"
+urldestino = "http://192.168.1.226/restapi/v1/canes"
 
 connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=applications;User=" & usuario & ";Password=" & passw & ";option=3;"
 
@@ -136,7 +133,7 @@ objHTTP.setRequestHeader "Authorization", autoriza
 
 objHTTP.send dato
  
-' MsgBox objHTTP.responseText
+MsgBox objHTTP.responseText
  
 Set objHTTP = Nothing
  

@@ -37,6 +37,16 @@ On Error Resume Next
 
         dbconn.Open connect
 
+
+        Query = "UPDATE b_ticket SET  NOMBRE_P = REPLACE(NOMBRE_P, 'MONTAÑAS', 'MONTANAS') WHERE NOMBRE_P LIKE '%MONTAÑAS%';"
+
+        Set myCommand1.ActiveConnection = connect
+
+        myCommand1.CommandText = Query
+
+        myCommand1.Execute
+
+
         Query = "select " & Campos & " from b_ticket where status = 'OK' and zafra = '" & sZafra & "' order by ticket;"
 
         Query1 = "insert into b_ticket_b (" & Campos & ") values "
@@ -53,11 +63,13 @@ On Error Resume Next
                 if nReg = 1 Then
                     Ejecuta "delete from b_ticket_b",Destino 
                 end if
+
+                ajustenom = REPLACE(rs.Fields(2),"MONTAÑAS","MONTANAS",1,,1) 
     
                 Valores = "(" & _
                 IIF(isnull(rs.Fields(0)) = false,"'" & rs.Fields(0) & "'","null") & "," & _
                 IIF(isnull(rs.Fields(1)) = false,rs.Fields(1),"null") & ","  & _
-                IIF(isnull(rs.Fields(2)) = false,"'" & REPLACE(rs.Fields(2),"Ñ","N")  & "'","null")  & ","    & _
+                IIF(isnull(rs.Fields(2)) = false,"'" & ajustenom  & "'","null")  & ","    & _
                 IIF(isnull(rs.Fields(3)) = false,rs.Fields(3),"null") & ","  & _
                 IIF(isnull(rs.Fields(4)) = false,"'" & rs.Fields(4) & "'","null")  & ","   & _
                 IIF(isnull(rs.Fields(5)) = false,rs.Fields(5),"null") & ","  & _
@@ -110,6 +122,7 @@ On Error Resume Next
                 IIF(isnull(rs.Fields(52)) = false,"'" & rs.Fields(52) & "'","null")  & ","    & _
                 IIF(isnull(rs.Fields(53)) = false,"'" & rs.Fields(53) & "'","null")  & ")"
 
+               
                 Ejecuta Query1 & Valores,Destino
     
                 rs.MoveNext
@@ -125,7 +138,7 @@ On Error Resume Next
     End if
 
     if err.Number <> 0 Then
-        MsgBox "Solicitar asistencia a Informatica, error de ejecucion " & err.Description 
+        MsgBox "Solicitar asistencia a Informatica, error de ejecucion " & err.Description & " " & err.Number &  " " & ajustenom
     end if
 
 
