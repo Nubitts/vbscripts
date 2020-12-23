@@ -38,7 +38,7 @@ On Error Resume Next
         dbconn.Open connect
 
 
-        Query = "UPDATE b_ticket SET  NOMBRE_P = REPLACE(NOMBRE_P, 'MONTAÑAS', 'MONTANAS') WHERE NOMBRE_P LIKE '%MONTAÑAS%';"
+        Query = "UPDATE b_ticket SET  NOMBRE_P = REPLACE(NOMBRE_P, 'Ñ', 'N') WHERE NOMBRE_P LIKE '%Ñ%'; UPDATE b_ticket SET  nom_alz = REPLACE(NOMBRE_P, 'Ñ', 'N') WHERE nom_alz LIKE '%Ñ%'"
 
         Set myCommand1.ActiveConnection = connect
 
