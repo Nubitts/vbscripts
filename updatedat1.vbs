@@ -35,17 +35,20 @@ On Error Resume Next
         Set myCommand = CreateObject("ADODB.Command")
         set rs = CreateObject("ADODB.Recordset")
 
+        dim queries(3)
+
+        queries(0) = "UPDATE b_ticket SET  NOMBRE_P = REPLACE(NOMBRE_P, 'Ñ', 'N') WHERE NOMBRE_P LIKE '%Ñ%'"
+        queries(1) = "UPDATE b_ticket SET  nom_alz = REPLACE(NOMBRE_P, 'Ñ', 'N') WHERE nom_alz LIKE '%Ñ%'"
+        queries(2) = "UPDATE b_ticket SET  nom_flet = REPLACE(nom_flet, 'Ñ', 'N') WHERE nom_flet LIKE '%Ñ%'"
+
         dbconn.Open connect
-
-
-        Query = "UPDATE b_ticket SET  NOMBRE_P = REPLACE(NOMBRE_P, 'Ñ', 'N') WHERE NOMBRE_P LIKE '%Ñ%'; UPDATE b_ticket SET  nom_alz = REPLACE(NOMBRE_P, 'Ñ', 'N') WHERE nom_alz LIKE '%Ñ%'"
 
         Set myCommand1.ActiveConnection = connect
 
-        myCommand1.CommandText = Query
-
-        myCommand1.Execute
-
+        for iC = 0 to 10
+            myCommand1.CommandText =  queries(iC)
+            myCommand1.Execute
+        next
 
         Query = "select " & Campos & " from b_ticket where status = 'OK' and zafra = '" & sZafra & "' order by ticket;"
 
@@ -121,7 +124,6 @@ On Error Resume Next
                 IIF(isnull(rs.Fields(51)) = false, rs.Fields(51),"null")   & ","  & _
                 IIF(isnull(rs.Fields(52)) = false,"'" & rs.Fields(52) & "'","null")  & ","    & _
                 IIF(isnull(rs.Fields(53)) = false,"'" & rs.Fields(53) & "'","null")  & ")"
-
                
                 Ejecuta Query1 & Valores,Destino
     
