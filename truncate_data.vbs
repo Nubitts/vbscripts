@@ -1,7 +1,7 @@
-Destino = "192.168.1.226"
+Destino = "localhost"
 puerto = "3306"
 
-Oracion = "delete from canes_tempo where where MONTH(CURRENT_DATE())= month(fecha) and zafrad = 2021"
+Oracion = "delete from canes_tempo where MONTH(CURRENT_DATE())= month(fecha) and zafrad = 2021;"
 
 connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server="& Destino & ";PORT=" & puerto & ";Database=applications;User=root;Password=12345;option=3;"
 
