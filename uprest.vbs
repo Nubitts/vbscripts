@@ -71,75 +71,104 @@ sub sugar(origen, puerto, usuario, password, autoriza)
 
 end sub
 
+sub reglog(evento,describe)
+
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=192.168.1.226;PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
+
+    Set dbconn = CreateObject("ADODB.Connection")
+    Set myCommand = CreateObject("ADODB.Command")
+    set rs = CreateObject("ADODB.Recordset")
+
+    dim valores
+
+    dbconn.Open connect
+
+    valores = "'" & evento & "', '" & describe & "','API6am','API',curdate()"
+
+    Query = "insert into logs (event,description,tuser,tapp,daterec)  values (" & Campos & ");"
+
+
+    Set myCommand1.ActiveConnection = dbconn
+
+    myCommand1.CommandText = Query
+
+    myCommand1.Execute
+
+    dbconn.Close
+
+end sub
+
 sub canes(origen, puerto, usuario, password, autoriza)
 
-urldestino = "http://www.ingenioelcarmen.com/restdata/v1/canes"
+    urldestino = "http://www.ingenioelcarmen.com/restdata/v1/canes"
 
-connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=applications;User=" & usuario & ";Password=" & passw & ";option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=applications;User=" & usuario & ";Password=" & passw & ";option=3;"
 
-Set dbconn = CreateObject("ADODB.Connection")
-Set myCommand = CreateObject("ADODB.Command")
-set rs = CreateObject("ADODB.Recordset")
+    Set dbconn = CreateObject("ADODB.Connection")
+    Set myCommand = CreateObject("ADODB.Command")
+    set rs = CreateObject("ADODB.Recordset")
 
-dim valores
+    dim valores
 
-dbconn.Open connect
+    dbconn.Open connect
 
-Campos = "idhr,zona,organiza,clave,nombre,ciclo,orden,ticket,fletero,fecha,hora,neto,descto,liquido,alzadora,diaz,zafrad,nofecha,derivada,tabla,grupo,"  & _
-"pesob,pesot,peson,pesol,plantas,socas,resocas,ton_cruda,ton_quemada,ton_descuentos,ton_castigos,btkt_cruda,btkt_quemada,btkt_caña as btkt_cana,ton_manual,"  & _
-"ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent,nom_grupo"
+    Campos = "idhr,zona,organiza,clave,nombre,ciclo,orden,ticket,fletero,fecha,hora,neto,descto,liquido,alzadora,diaz,zafrad,nofecha,derivada,tabla,grupo,"  & _
+    "pesob,pesot,peson,pesol,plantas,socas,resocas,ton_cruda,ton_quemada,ton_descuentos,ton_castigos,btkt_cruda,btkt_quemada,btkt_caña as btkt_cana,ton_manual,"  & _
+    "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent,nom_grupo"
 
 
-Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) order by fecha desc, hora desc;"
+    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and nofecha = (select max(nofecha)-1 from canes_tempo) order by fecha desc, hora desc;"
 
-rs.Open Query, dbconn
+    rs.Open Query, dbconn
 
-if not rs.eof Then
+    if not rs.eof Then
 
-    rs.movefirst
+        rs.movefirst
 
-    while not rs.eof 
+        while not rs.eof 
 
-        lRecCnt = lRecCnt + 1
-        sFlds = ""
-        for each fld in rs.Fields
+            lRecCnt = lRecCnt + 1
+            sFlds = ""
+            for each fld in rs.Fields
 
-            sFld = fld.Name & "=" & iif(isnull(fld.Value)=false,iif(instr(fld.Value,"/") = 0, toUnicode(iif(isnull(fld.Value)=true,"_",fld.Value)),conv_f(fld.Value)),"_")
-            sFlds = sFlds & iif(sFlds <> "", "&", "") & sFld
+                sFld = fld.Name & "=" & iif(isnull(fld.Value)=false,iif(instr(fld.Value,"/") = 0, toUnicode(iif(isnull(fld.Value)=true,"_",fld.Value)),conv_f(fld.Value)),"_")
+                sFlds = sFlds & iif(sFlds <> "", "&", "") & sFld
 
-        next 
-        sRec = sFlds 
+            next 
+            sRec = sFlds 
 
-        posting sRec,urldestino,autoriza
+            posting sRec,urldestino,autoriza
 
-        rs.movenext
+            rs.movenext
 
-    Wend
+        Wend
 
-end if
+    end if
 
-rs.Close
+    rs.Close
 
-dbconn.Close
-
+    dbconn.Close
 
 end sub
 
 sub posting(dato,url,autoriza)
 
-Set objHTTP = CreateObject("Microsoft.XMLHTTP")
+    dim Respuesta
 
-objHTTP.open "POST", url, False
- 
-objHTTP.setRequestHeader "Content-Type", "application/x-www-form-urlencoded"
-objHTTP.setRequestHeader "Authorization", autoriza
+    Set objHTTP = CreateObject("Microsoft.XMLHTTP")
 
-objHTTP.send dato
- 
-' MsgBox objHTTP.responseText
- 
-Set objHTTP = Nothing
- 
+    objHTTP.open "POST", url, False
+    
+    objHTTP.setRequestHeader "Content-Type", "application/x-www-form-urlencoded"
+    objHTTP.setRequestHeader "Authorization", autoriza
+
+    objHTTP.send dato
+    
+    Respuesta = objHTTP.responseText
+    
+    Set objHTTP = Nothing
+    
+    relog "updapi",respuesta
 
 end sub
 
