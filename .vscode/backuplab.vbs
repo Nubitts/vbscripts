@@ -6,7 +6,7 @@ Set fso = CreateObject("Scripting.FileSystemObject")
 
 If (fso.FileExists(path)) Then
 
-    fso.CopyFile path, "C:\Backup\", true
+    fso.CopyFile path, "d:\backlab\", true
 
     ' conexion = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=Data Source=C:\Backup\laboratorio.accdb; Jet OLEDB:Database Password=cafe@kid_inca13;"
 
