@@ -114,7 +114,7 @@ sub canes(origen, puerto, usuario, password, autoriza)
 
     dbconn.Open connect
 
-     Campos = "idhr,zona,organiza,clave,nombre,ciclo,orden,ticket,fletero,fecha,hora,neto,descto,liquido,alzadora,diaz,zafrad,nofecha,derivada,tabla,grupo,"  & _
+     Campos = "idhr,zona,organiza,clave,case when LENGTH(nombre) = 0 then '_' else nombre end as nombre,ciclo,orden,ticket,fletero,fecha,hora,neto,descto,liquido,alzadora,diaz,zafrad,nofecha,derivada,tabla,grupo,"  & _
     "pesob,pesot,peson,pesol,plantas,socas,resocas,ton_cruda,ton_quemada,ton_descuentos,ton_castigos,btkt_cruda,btkt_quemada,btkt_caña as btkt_cana,ton_manual,"  & _
     "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent,nom_grupo"
 
