@@ -43,7 +43,7 @@ sub sugar(origen, puerto, usuario, password, autoriza)
 
     dbconn.Open connect
 
-    Campos = "date_rec,hour,sugar,cane_ground"
+    Campos = "date_rec,hour,sugar,cane_ground, nofecha"
 
 
     Query = "select " & Campos & " from sugar_tempo order by date_rec, hour;"
@@ -71,7 +71,7 @@ sub sugar(origen, puerto, usuario, password, autoriza)
 
             lRecCnt = lRecCnt + 1
 
-            'posting sRec,urldestino,autoriza
+            posting sRec,urldestino,autoriza
 
             rs.movenext
 

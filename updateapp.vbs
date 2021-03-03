@@ -38,7 +38,7 @@ sub canes(Origen,Destino)
     "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent"
 
 
-    Query = "select " & Campos & " from `caña` where zafrad = 2021 order by orden, ticket;"
+    Query = "select " & Campos & " from `caña` where zafrad = 2021 and nofecha = (select max(nofecha) from `caña` where zafrad = 2021) order by orden, ticket;"
 
     Queryd = "insert into canes_tempo (" & Campos & ") values"
 
@@ -50,7 +50,7 @@ sub canes(Origen,Destino)
 
         while not rs.eof 
 
-            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = 2021 and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = true Then
+            if valida_reg(Destino,"canes_tempo", "", " "," zafrad = 2021  and  orden =  " & rs.Fields(6) & " and ticket = " & rs.Fields(7)) = true Then
 
                 valores = " (" & rs.Fields(0) & ", " 
                 valores = valores & rs.Fields(1) & ", "
@@ -287,7 +287,7 @@ function valida_reg(Destino,Tabla, Campo, Valor, expresion)
 
     dim Resulta
 
-    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3306;Database=applications;User=root;Password=12345;option=3;"
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Destino & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     Set dbconn = CreateObject("ADODB.Connection")
     Set myCommand = CreateObject("ADODB.Command")
@@ -318,7 +318,7 @@ sub Ejecuta(Oracion, Destino)
     Set dbconn1 = CreateObject("ADODB.Connection")
     Set myCommand1 = CreateObject("ADODB.Command")
 
-    connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server="& Destino & ";PORT=3306;Database=applications;User=root;Password=12345;option=3;"
+    connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server="& Destino & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
 
     dbconn1.Open connect1
 
