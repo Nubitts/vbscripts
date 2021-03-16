@@ -22,8 +22,78 @@ if ChOrigen = true Then
    canes Origen,puerto,usuario,passw,autoriza
 
    sugar Origen,puerto,usuario,passw,autoriza
+
+   probdeliv Origen,puerto,usuario,passw,autoriza
    
 end if
+
+sub probdeliv(origen, puerto, usuario, password, autoriza)
+    urldestino = "http://www.ingenioelcarmen.com/restdata/v1/probdeliver"    
+
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=applications;User=" & usuario & ";Password=" & passw & ";option=3;"
+
+    Set dbconn = CreateObject("ADODB.Connection")
+    Set myCommand = CreateObject("ADODB.Command")
+    set rs = CreateObject("ADODB.Recordset")
+
+    dim valores
+
+    dim aprobde()
+
+    dim lRecCnt
+
+    dbconn.Open connect
+
+    Campos = "fecha,tonday,probtoday,wd,nofecha,percent"
+
+
+    Query = "select " & Campos & " from vacumd1 order by fecha;"
+
+    rs.Open Query, dbconn
+
+        if not rs.eof Then
+
+            rs.movefirst
+
+            while not rs.eof 
+
+                sFlds = ""
+                for each fld in rs.Fields
+
+                    sFld = fld.Name & "=" & iif(instr(fld.Value,"/") = 0, toUnicode(iif(isnull(fld.Value)=true,"_",fld.Value)),conv_f(fld.Value))
+                    sFlds = sFlds & iif(sFlds <> "", "&", "") & sFld
+
+                next 
+                sRec = sFlds 
+
+                ReDim Preserve aprobde(lRecCnt)
+
+                aprobde(lRecCnt) = sRec
+
+                lRecCnt = lRecCnt + 1
+
+                posting sRec,urldestino,autoriza
+
+                rs.movenext
+
+            Wend
+
+        end if
+
+    rs.Close
+
+    dbconn.Close
+
+    
+    for Conta = 0 to lRecCnt Step 1 
+
+        posting aprobde(Conta),urldestino,autoriza
+
+    Next
+   
+
+end sub
+
 
 sub sugar(origen, puerto, usuario, password, autoriza)
 
