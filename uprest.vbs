@@ -44,7 +44,7 @@ sub tprob(origen, puerto, usuario, password, autoriza)
     Campos = "fecha, division, zona, probtoday, wd, nofecha"
 
 
-    Query = "select " & Campos & " from vprobdeldivzn order by nofecha;"
+    Query = "select " & Campos & " from vprobdeldivzn where nofecha = maxday();"
 
     rs.Open Query, dbconn
 
@@ -167,7 +167,7 @@ sub sugar(origen, puerto, usuario, password, autoriza)
     Campos = "date_rec,hour,sugar,cane_ground, nofecha"
 
 
-    Query = "select " & Campos & " from sugar_tempo order by date_rec, hour;"
+    Query = "select " & Campos & " from sugar_tempo where nofecha = maxday() order by date_rec, hour;"
 
     rs.Open Query, dbconn
 
@@ -240,7 +240,7 @@ sub canes(origen, puerto, usuario, password, autoriza)
     "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent,nom_grupo"
 
 
-    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and nofecha = (select max(nofecha) from canes_tempo) order by fecha desc, hora desc;"
+    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and nofecha = maxday() order by fecha desc, hora desc;"
 
     dim lRecCnt
 
