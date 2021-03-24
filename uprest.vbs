@@ -19,11 +19,16 @@ ChOrigen = Valida_ip(origen)
 
 if ChOrigen = true Then
    
+
+   ejecuta "delete from sugar_tempo where date_rec is null",Origen
+
    canes Origen,puerto,usuario,passw,autoriza
 
    sugar Origen,puerto,usuario,passw,autoriza
 
    tprob Origen,puerto,usuario,passw,autoriza
+
+   probdeliv Origen,puerto,usuario,passw,autoriza
    
 end if
 
@@ -79,7 +84,7 @@ sub tprob(origen, puerto, usuario, password, autoriza)
 end sub
 
 sub probdeliv(origen, puerto, usuario, password, autoriza)
-    urldestino = "http://www.ingenioelcarmen.com/restdata/v1/probd"    
+    urldestino = "http://www.ingenioelcarmen.com/restdata/v1/acumd"    
 
     connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=applications;User=" & usuario & ";Password=" & passw & ";option=3;"
 
@@ -98,7 +103,7 @@ sub probdeliv(origen, puerto, usuario, password, autoriza)
     Campos = "fecha,tonday,probtoday,wd,nofecha,percent"
 
 
-    Query = "select " & Campos & " from vacumd1 order by fecha;"
+    Query = "select " & Campos & " from vacumd1 where nofecha = maxday();"
 
     rs.Open Query, dbconn
 
@@ -167,7 +172,7 @@ sub sugar(origen, puerto, usuario, password, autoriza)
     Campos = "date_rec,hour,sugar,cane_ground, nofecha"
 
 
-    Query = "select " & Campos & " from sugar_tempo where nofecha = maxday() order by date_rec, hour;"
+    Query = "select " & Campos & " from sugar_tempo where nofecha = 210323 order by date_rec, hour;"
 
     rs.Open Query, dbconn
 
@@ -519,3 +524,25 @@ Function PrefixZero(num)
 		PrefixZero=num
 	End If
 End Function
+
+sub Ejecuta(Oracion, Destino)
+    dim connect1
+    dim dbconn1
+    dim myCommand1
+
+    Set dbconn1 = CreateObject("ADODB.Connection")
+    Set myCommand1 = CreateObject("ADODB.Command")
+
+    connect1 = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server="& Destino & ";PORT=3307;Database=applications;User=masteroot;Password=ADVG12345;option=3;"
+
+    dbconn1.Open connect1
+
+    Set myCommand1.ActiveConnection = dbconn1
+
+    myCommand1.CommandText = Oracion
+
+    myCommand1.Execute
+
+    dbconn1.Close
+
+end sub 
