@@ -20,15 +20,15 @@ ChOrigen = Valida_ip(origen)
 if ChOrigen = true Then
    
 
-   ejecuta "delete from sugar_tempo where date_rec is null",Origen
+  ejecuta "delete from sugar_tempo where date_rec is null",Origen
 
-   canes Origen,puerto,usuario,passw,autoriza
+  canes Origen,puerto,usuario,passw,autoriza
 
-   sugar Origen,puerto,usuario,passw,autoriza
+  sugar Origen,puerto,usuario,passw,autoriza
 
-   tprob Origen,puerto,usuario,passw,autoriza
+  tprob Origen,puerto,usuario,passw,autoriza
 
-   probdeliv Origen,puerto,usuario,passw,autoriza
+  probdeliv Origen,puerto,usuario,passw,autoriza
    
 end if
 
@@ -172,7 +172,7 @@ sub sugar(origen, puerto, usuario, password, autoriza)
     Campos = "date_rec,hour,sugar,cane_ground, nofecha"
 
 
-    Query = "select " & Campos & " from sugar_tempo where nofecha = 210323 order by date_rec, hour;"
+    Query = "select " & Campos & " from sugar_tempo where nofecha = maxday() order by date_rec, hour;"
 
     rs.Open Query, dbconn
 
