@@ -19,7 +19,6 @@ ChOrigen = Valida_ip(origen)
 
 if ChOrigen = true Then
    
-
   ejecuta "delete from sugar_tempo where date_rec is null",Origen
 
   canes Origen,puerto,usuario,passw,autoriza
@@ -150,7 +149,6 @@ sub probdeliv(origen, puerto, usuario, password, autoriza)
 
 end sub
 
-
 sub sugar(origen, puerto, usuario, password, autoriza)
 
     urldestino = "http://www.ingenioelcarmen.com/restdata/v1/sugar"    
@@ -218,7 +216,6 @@ sub sugar(origen, puerto, usuario, password, autoriza)
    
 
 end sub
-
 
 sub canes(origen, puerto, usuario, password, autoriza)
 
