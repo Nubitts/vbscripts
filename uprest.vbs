@@ -28,8 +28,61 @@ if ChOrigen = true Then
   tprob Origen,puerto,usuario,passw,autoriza
 
   probdeliv Origen,puerto,usuario,passw,autoriza
+
+  ticketempty Origen,puerto,usuario,passw,autoriza
    
 end if
+
+sub ticketempty(origen, puerto, usuario, password, autoriza)
+
+    urldestino = "http://www.ingenioelcarmen.com/restdata/v1/tickempty"    
+
+    connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=applications;User=" & usuario & ";Password=" & passw & ";option=3;"
+
+    Set dbconn = CreateObject("ADODB.Connection")
+    Set myCommand = CreateObject("ADODB.Command")
+    set rs = CreateObject("ADODB.Recordset")
+
+    dim valores
+
+    dbconn.Open connect
+
+    Campos = "zafra, nombre_p,ticket,zona "
+
+
+    Query = "select " & Campos & " from tickets_empty where zafra = 2021 and status_ = 0 and capture = 0;"
+
+    rs.Open Query, dbconn
+
+    if not rs.eof Then
+
+        rs.movefirst
+
+        while not rs.eof 
+
+            lRecCnt = lRecCnt + 1
+            sFlds = ""
+            for each fld in rs.Fields
+
+                sFld = fld.Name & "=" & iif(instr(fld.Value,"/") = 0, toUnicode(iif(isnull(fld.Value)=true,"_",fld.Value)),conv_f(fld.Value))
+                sFlds = sFlds & iif(sFlds <> "", "&", "") & sFld
+
+            next 
+            sRec = sFlds 
+
+            posting sRec,urldestino,autoriza
+
+            rs.movenext
+
+        Wend
+
+    end if
+
+    rs.Close
+
+    dbconn.Close
+
+end sub
 
 sub tprob(origen, puerto, usuario, password, autoriza)
 

@@ -1,8 +1,10 @@
+On Error Resume Next
+
 Dim Origen, puerto, usuario, passw 
 
 Const ForAppending = 8
 Const LOG_FOLDER = "C:\logapi\"
-Const LOG_FILE = "test"
+Const LOG_FILE = "ticket"
 Const LOG_FILE_EXTENSION = ".log"
 Const LOG_FILE_SEPARATOR = "_"
 
@@ -26,7 +28,7 @@ end if
 
 sub gross(origen, puerto, usuario, password, autoriza)
 
-    urldestino = "http://192.168.1.226/restapi/v1/grossw"    
+    urldestino = "http://192.168.1.226/restapi/v1/tickempty"    
 
     connect = "Driver={MySQL ODBC 8.0 ANSI Driver};charset=UTF8;Server=" & Origen & ";PORT=" & puerto & ";Database=bascula;User=" & usuario & ";Password=" & passw & ";option=3;"
 
@@ -38,7 +40,7 @@ sub gross(origen, puerto, usuario, password, autoriza)
 
     dbconn.Open connect
 
-    Query = "select zafra,nofecha,zona,numtra,nom_flet,horent,pesob FROM `b_ticket` where `status` = 'BATEY' and ZAFRA = 2021;"
+    Query = "select zafra, nombre_p,ticket,zona  from b_ticket where zafra = 2021 and status not in ('BATEY','OK');"
 
     rs.Open Query, dbconn
 
@@ -82,8 +84,6 @@ objHTTP.open "POST", url, False
  
 objHTTP.setRequestHeader "Content-Type", "application/x-www-form-urlencoded"
 objHTTP.setRequestHeader "Authorization", autoriza
-
-msgbox dato
 
 objHTTP.send dato
  

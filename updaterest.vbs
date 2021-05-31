@@ -14,11 +14,11 @@ ChOrigen = Valida_ip(origen)
 
 if ChOrigen = true Then
 
-    tprob Origen,puerto,usuario,passw,autoriza
+  '  tprob Origen,puerto,usuario,passw,autoriza
 
     canes Origen,puerto,usuario,passw,autoriza
 
-    sugar Origen,puerto,usuario,passw,autoriza
+  '  sugar Origen,puerto,usuario,passw,autoriza
    
 end if
 
@@ -143,7 +143,7 @@ sub canes(origen, puerto, usuario, password, autoriza)
     "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent,nom_grupo"
 
 
-    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and fecha = curdate() order by fecha desc, hora desc;"
+    Query = "select " & Campos & " from canes_tempo where zafrad = (select zafra from zafraparams where actual = 1 ) and nofecha = '2105%' order by fecha desc, hora desc;"
 
     rs.Open Query, dbconn
 

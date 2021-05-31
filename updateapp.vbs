@@ -1,7 +1,7 @@
 Dim Origen 
 Origen = "192.168.1.226"
 Dim Destino 
-Destino = "localhost"
+Destino = "192.168.1.226"
 
 
 ChOrigen = Valida_ip(origen) 
@@ -38,7 +38,7 @@ sub canes(Origen,Destino)
     "ton_alzadora,ton_cosechadora,libre,fecque,horque,TPOCAN,fecpen,horent"
 
 
-    Query = "select " & Campos & " from `caña` where zafrad = 2021 and nofecha = (select max(nofecha) from `caña` where zafrad = 2021) order by orden, ticket;"
+    Query = "select " & Campos & " from `caña` where zafrad = 2021 and nofecha in (210505,210507,210508,210509,210510,210515,210518,210520,210522) order by orden, ticket;"
 
     Queryd = "insert into canes_tempo (" & Campos & ") values"
 

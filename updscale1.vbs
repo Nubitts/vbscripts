@@ -279,6 +279,8 @@ sub Ejecuta(Oracion, Destino)
 
     Set myCommand1.ActiveConnection = dbconn1
 
+MsgBox Oracion
+
     myCommand1.CommandText = Oracion
 
     myCommand1.Execute
